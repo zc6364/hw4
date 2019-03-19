@@ -139,4 +139,47 @@ imshow(uint8(I_2));
 title('sobel_edge');
 end
 
+function [outputArg1,outputArg2] = canny(a,n)
+%canny
+image = imread(a);
+I_1 = edge(image,'canny');
+figure(n);
+subplot(1,4,4);
+%imshow(image);
+%subplot(1,2,2);
+imshow(I_1);
+title('canny');
+end
 
+function [] = Laplace(a,n)
+%Laplace
+I = imread(a);
+I_1 = double(I);
+%编写
+% [row,column] = size(I_1);
+% for i = 2:row-1
+%     for j = 2:column-1
+%         t(i,j) = -4*I_1(i,j)+I_1(i-1,j)+I_1(i+1,j)+I_1(i,j-1)+I_1(i,j+1);
+%     end
+% end
+% figure(n);
+%subplot(1,2,1);
+%imshow(I);
+%调用函数
+t = edge(I_1,'log');
+subplot(1,4,3);
+imshow(t);
+title('laplace');
+end
+
+%test3
+USM('test3_corrupt.pgm',1);
+sobel_edge('test3_corrupt.pgm',1);
+Laplace('test3_corrupt.pgm',1);
+canny('test3_corrupt.pgm',1);
+
+%test4
+USM('test4 copy.bmp',2);
+sobel_edge('test4 copy.bmp',2);
+Laplace('test4 copy.bmp',2);
+canny('test4 copy.bmp',2);
