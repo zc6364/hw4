@@ -1,0 +1,142 @@
+%第一题
+
+%高斯滤波器
+I = imread('test2.tif');
+w = fspecial('gaussian',[7 7],0.1);
+m = imfilter(I,w,'replicate');
+figure(1);
+subplot(1,3,1);
+imshow('test2.tif');
+title('test2');
+subplot(1,3,2)
+imshow(m);
+title('7*7高斯滤波');
+
+%中值滤波器
+S = medfilt2(I,[7 7]);
+subplot(1,3,3);
+imshow(S);
+title('7*7中值滤波');
+
+
+
+I = imread('test2.tif');
+w = fspecial('gaussian',[5 5],0.1);
+m = imfilter(I,w,'replicate');
+figure(2);
+subplot(1,3,1);
+imshow('test2.tif');
+title('test2');
+subplot(1,3,2)
+imshow(m);
+title('5*5高斯滤波');
+
+%中值滤波器
+S = medfilt2(I,[5 5]);
+subplot(1,3,3);
+imshow(S);
+title('5*5中值滤波');
+
+I = imread('test2.tif');
+w = fspecial('gaussian',[3 3],0.1);
+m = imfilter(I,w,'replicate');
+figure(3);
+subplot(1,3,1);
+imshow('test2.tif');
+title('test2');
+subplot(1,3,2)
+imshow(m);
+title('3*3高斯滤波');
+
+%中值滤波器
+S = medfilt2(I,[3 3]);
+subplot(1,3,3);
+imshow(S);
+title('3*3中值滤波');
+
+%第二题
+function [] = gaussian(n,a,x)
+%高斯滤波器
+%生成模板
+I = imread(a);
+s = 1.5;
+sum = 0
+for i = 1:n
+    for j = 1:n
+        model(i,j) = 1/(2*pi*s^2)*exp(-((i-(n-1)/2).^2+(j-(n-1)/2).^2)/(2*s^2));
+        sum = sum + model(i,j);
+    end
+end
+
+%开始运算
+model = model./sum;
+I_G = conv2(double(I),double(model),'valid');
+figure(1);
+%subplot(1,2,1);
+%imshow(I);
+subplot(2,3,x+3);
+imshow(uint8(I_G))
+title([num2str(n) '*' num2str(n) '自写滤波']);
+end
+
+%直接调用matlab函数
+I = imread('test1.pgm');
+w = fspecial('gaussian',[7 7],0.1);
+w1 = fspecial('gaussian',[5 5],0.1);
+w2 = fspecial('gaussian',[3 3],0.1);
+m = imfilter(I,w,'replicate');
+m1 = imfilter(I,w1,'replicate');
+m2 = imfilter(I,w2,'replicate');
+figure(1);
+subplot(2,3,1);
+imshow(m);
+title('7*7自带高斯滤波');
+subplot(2,3,2);
+imshow(m1);
+title('5*5自带高斯滤波');
+subplot(2,3,3)
+imshow(m2);
+title('3*3自带滤波');
+
+
+%自己编写的函数
+gaussian(7,'test1.pgm',1);
+gaussian(5,'test1.pgm',2);
+gaussian(3,'test1.pgm',3);
+
+%第三题
+function [] = USM(a,n)
+% USM
+I = imread(a);
+w = fspecial('gaussian',[7 7],0.1);
+m = imfilter(I,w,'replicate');
+figure(n);
+%subplot(1,4,1);
+%imshow(I);
+subplot(1,4,1)
+c= (I - 0.6*m)/0.4;
+imshow(c);
+title('USM');
+end
+
+function [] = sobel_edge(a,n)
+%sobel
+I = imread(a);
+I_1 = double(I);
+[row,column] = size(I_1);
+for i = 2:row-1
+    for j = 2:column-1
+        x = (I_1(i+1,j-1) + 2*I_1(i+1,j) + I_1(i+1,j+1)) - (I_1(i-1,j-1) + 2*I_1(i-1,j) + I_1(i-1,j+1));
+        y = (I_1(i-1,j+1) + 2*I_1(i,j+1) + I_1(i+1,j+1)) - (I_1(i-1,j-1) + 2*I_1(i,j-1) + I_1(i+1,j-1));
+        I_2(i,j) = sqrt(x^2)+sqrt(y^2);
+    end
+end
+figure(n);
+%subplot(1,2,1);
+%imshow(I);
+subplot(1,4,2);
+imshow(uint8(I_2));
+title('sobel_edge');
+end
+
+
